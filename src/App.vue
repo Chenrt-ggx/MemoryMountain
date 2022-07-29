@@ -35,6 +35,11 @@ import { parse } from '@/utils/parse';
 export default {
     data: function () {
         return {
+            echarts: null,
+            inputStr: '',
+            xAxis: [],
+            yAxis: [],
+            mountain: [],
             colors: [
                 '#313695',
                 '#4575b4',
@@ -61,18 +66,22 @@ export default {
             viewControl: {
                 projection: 'perspective',
                 alpha: 15,
-                beta: -135,
+                beta: -150,
                 distance: 240
             },
-            echarts: null,
-            inputStr: '',
-            xAxis: [],
-            yAxis: [],
-            mountain: []
+            textStyle: {
+                fontSize: 15,
+                fontFamily: 'Serif'
+            },
+            nameStyle: {
+                fontSize: 17,
+                fontFamily: 'Serif'
+            }
         };
     },
     mounted() {
         this.echarts = this.$echarts.init(this.$refs.surface);
+        this.colors.reverse();
         this.refresh();
     },
     methods: {
@@ -84,7 +93,7 @@ export default {
                     show: false,
                     min: Math.min(...formatted.map((i) => i[2])),
                     max: Math.max(...formatted.map((i) => i[2])),
-                    color: this.colors.reverse()
+                    color: this.colors
                 },
                 grid3D: {
                     light: this.lights,
@@ -93,17 +102,27 @@ export default {
                 xAxis3D: {
                     type: 'category',
                     data: this.xAxis,
-                    name: '工作集大小（字节）'
+                    name: '工作集大小（字节）',
+                    nameTextStyle: this.nameStyle,
+                    axisLabel: {
+                        textStyle: this.textStyle
+                    }
                 },
                 yAxis3D: {
                     type: 'category',
                     data: this.yAxis,
-                    name: '步长（字）'
+                    name: '步长（字）',
+                    nameTextStyle: this.nameStyle,
+                    axisLabel: {
+                        textStyle: this.textStyle
+                    }
                 },
                 zAxis3D: {
                     name: '读吞吐率（MB/s）',
+                    nameTextStyle: this.nameStyle,
                     axisLabel: {
-                        show: formatted.length > 0
+                        show: formatted.length > 0,
+                        textStyle: this.textStyle
                     }
                 },
                 series: [
