@@ -1,5 +1,14 @@
 <template>
-    <div id="app" ref="surface" class="main-container"></div>
+    <v-app id="app">
+        <v-row no-gutters>
+            <v-col :cols="8">
+                <div ref="surface" class="main-container"></div>
+            </v-col>
+            <v-col :cols="4">
+                <div>xxx</div>
+            </v-col>
+        </v-row>
+    </v-app>
 </template>
 
 <script>
@@ -28,6 +37,10 @@ export default {
                 ambient: {
                     intensity: 0.8
                 }
+            },
+            viewControl: {
+                projection: 'perspective',
+                distance: 240
             },
             mountain: [
                 [13169, 7740, 5662, 4520, 3446, 2915, 2473, 2121, 1849, 1455, 1380, 1172, 1008, 874, 959],
@@ -76,7 +89,8 @@ export default {
                 color: this.colors.reverse()
             },
             grid3D: {
-                light: this.lights
+                light: this.lights,
+                viewControl: this.viewControl
             },
             xAxis3D: {},
             yAxis3D: {},
@@ -111,7 +125,8 @@ body {
 
 <style scoped>
 .main-container {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 115%;
+    margin-top: -11%;
 }
 </style>
