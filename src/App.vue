@@ -12,7 +12,7 @@
                     label="粘贴运行结果"
                     class="mt-10 px-10"
                 ></v-textarea>
-                <v-row class="mt-1">
+                <v-row no-gutters class="mt-1">
                     <v-spacer></v-spacer>
                     <v-btn color="warning" outlined class="mx-12" @click="submit">
                         <v-icon class="mr-2">mdi-check</v-icon>
@@ -23,6 +23,9 @@
                         清空
                     </v-btn>
                     <v-spacer></v-spacer>
+                </v-row>
+                <v-row no-gutters class="mt-7">
+                    <div v-if="failed" class="red--text text-body-2 ml-10">* 解析失败，请检查您的输入。</div>
                 </v-row>
             </v-col>
         </v-row>
@@ -40,6 +43,7 @@ export default {
             xAxis: [],
             yAxis: [],
             mountain: [],
+            failed: false,
             colors: [
                 '#313695',
                 '#4575b4',
@@ -135,12 +139,18 @@ export default {
         },
         submit() {
             const result = parse(this.inputStr);
-            this.mountain = result['map'];
-            this.xAxis = result['xAxis'];
-            this.yAxis = result['yAxis'];
-            this.refresh();
+            if (result['xAxis'].length === 0 && result['yAxis'].length === 0) {
+                this.failed = true;
+            } else {
+                this.failed = false;
+                this.mountain = result['map'];
+                this.xAxis = result['xAxis'];
+                this.yAxis = result['yAxis'];
+                this.refresh();
+            }
         },
         reset() {
+            this.failed = false;
             this.inputStr = '';
             this.mountain = [];
             this.xAxis = this.yAxis = [];
