@@ -1,15 +1,15 @@
 export function parse(str) {
-    let x = [],
-        y = [],
+    let xAxis = [],
+        yAxis = [],
         map = [];
     str.trim()
         .split('\n')
         .map((i) => i.trim().split(/\s+/))
         .forEach((i) => {
             if (i.length === 15) {
-                x = i;
+                xAxis = i;
             } else if (i.length === 16) {
-                y.push(i[0]);
+                yAxis.push(i[0]);
                 map.push(
                     Array(i.length - 1)
                         .fill(1)
@@ -17,10 +17,9 @@ export function parse(str) {
                 );
             }
         });
-    console.log(map);
     return {
-        x: x,
-        y: y,
+        xAxis: xAxis,
+        yAxis: yAxis,
         map: map
     };
 }

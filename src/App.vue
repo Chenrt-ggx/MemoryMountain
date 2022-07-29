@@ -60,20 +60,26 @@ export default {
             },
             viewControl: {
                 projection: 'perspective',
+                alpha: 15,
+                beta: -135,
                 distance: 240
             },
+            echarts: null,
             inputStr: '',
+            xAxis: [],
+            yAxis: [],
             mountain: []
         };
     },
     mounted() {
+        this.echarts = this.$echarts.init(this.$refs.surface);
         this.refresh();
     },
     methods: {
         refresh() {
             let formatted = [];
             this.mountain.forEach((line, i) => line.forEach((item, j) => formatted.push([i, j, item])));
-            this.$echarts.init(this.$refs.surface).setOption({
+            this.echarts.setOption({
                 visualMap: {
                     show: false,
                     min: Math.min(...formatted.map((i) => i[2])),
@@ -84,9 +90,22 @@ export default {
                     light: this.lights,
                     viewControl: this.viewControl
                 },
-                xAxis3D: {},
-                yAxis3D: {},
-                zAxis3D: {},
+                xAxis3D: {
+                    type: 'category',
+                    data: this.xAxis,
+                    name: '工作集大小（字节）'
+                },
+                yAxis3D: {
+                    type: 'category',
+                    data: this.yAxis,
+                    name: '步长（字）'
+                },
+                zAxis3D: {
+                    name: '读吞吐率（MB/s）',
+                    axisLabel: {
+                        show: formatted.length > 0
+                    }
+                },
                 series: [
                     {
                         type: 'surface',
@@ -96,12 +115,16 @@ export default {
             });
         },
         submit() {
-            this.mountain = parse(this.inputStr)['map'];
+            const result = parse(this.inputStr);
+            this.mountain = result['map'];
+            this.xAxis = result['xAxis'];
+            this.yAxis = result['yAxis'];
             this.refresh();
         },
         reset() {
             this.inputStr = '';
             this.mountain = [];
+            this.xAxis = this.yAxis = [];
             this.refresh();
         }
     }
