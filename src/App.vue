@@ -5,27 +5,24 @@
                 <div ref="surface" class="main-container"></div>
             </v-col>
             <v-col :cols="4">
-                <v-textarea
-                    outlined
-                    :rows="18"
-                    v-model="inputStr"
-                    label="粘贴运行结果"
-                    class="mt-10 px-10"
-                ></v-textarea>
+                <v-textarea filled :rows="18" v-model="inputStr" label="粘贴运行结果" class="mt-10 px-10"></v-textarea>
                 <v-row no-gutters class="mt-1">
                     <v-spacer></v-spacer>
-                    <v-btn color="warning" outlined class="mx-12" @click="submit">
+                    <v-spacer></v-spacer>
+                    <v-btn color="warning" outlined @click="submit">
                         <v-icon class="mr-2">mdi-check</v-icon>
                         确认
                     </v-btn>
-                    <v-btn color="success" outlined class="mx-12" @click="reset">
+                    <v-spacer></v-spacer>
+                    <v-btn color="success" outlined @click="reset">
                         <v-icon class="mr-2">mdi-close-circle-outline</v-icon>
                         清空
                     </v-btn>
                     <v-spacer></v-spacer>
+                    <v-spacer></v-spacer>
                 </v-row>
                 <v-row no-gutters class="mt-7">
-                    <div v-if="failed" class="red--text text-body-2 ml-10">* 解析失败，请检查您的输入。</div>
+                    <div v-if="failed.length" class="red--text text-body-2 ml-10">{{ failed }}</div>
                 </v-row>
             </v-col>
         </v-row>
@@ -43,7 +40,7 @@ export default {
             xAxis: [],
             yAxis: [],
             mountain: [],
-            failed: false,
+            failed: '',
             colors: [
                 '#313695',
                 '#4575b4',
@@ -138,19 +135,23 @@ export default {
             });
         },
         submit() {
-            const result = parse(this.inputStr);
-            if (result['xAxis'].length === 0 && result['yAxis'].length === 0) {
-                this.failed = true;
+            if (this.inputStr.length === 0) {
+                this.failed = '* 你没有输入任何内容。';
             } else {
-                this.failed = false;
-                this.mountain = result['map'];
-                this.xAxis = result['xAxis'];
-                this.yAxis = result['yAxis'];
-                this.refresh();
+                const result = parse(this.inputStr);
+                if (result['xAxis'].length === 0 && result['yAxis'].length === 0) {
+                    this.failed = '* 解析失败，请检查您的输入。';
+                } else {
+                    this.failed = '';
+                    this.mountain = result['map'];
+                    this.xAxis = result['xAxis'];
+                    this.yAxis = result['yAxis'];
+                    this.refresh();
+                }
             }
         },
         reset() {
-            this.failed = false;
+            this.failed = '';
             this.inputStr = '';
             this.mountain = [];
             this.xAxis = this.yAxis = [];
