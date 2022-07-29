@@ -83,6 +83,14 @@ export default {
     mounted() {
         this.echarts = this.$echarts.init(this.$refs.surface);
         this.colors.reverse();
+        if (this.$route.query['map']) {
+            const result = parse(this.$route.query['map']);
+            if (result['xAxis'].length > 0 && result['yAxis'].length > 0) {
+                this.mountain = result['map'];
+                this.xAxis = result['xAxis'];
+                this.yAxis = result['yAxis'];
+            }
+        }
         this.refresh();
     },
     methods: {
