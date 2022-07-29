@@ -5,7 +5,7 @@
                 <div ref="surface" class="main-container"></div>
             </v-col>
             <v-col :cols="4">
-                <v-textarea filled :rows="18" v-model="inputStr" label="粘贴运行结果" class="mt-10 px-10"></v-textarea>
+                <v-textarea filled :rows="15" v-model="inputStr" label="粘贴运行结果" class="mt-10 px-10"></v-textarea>
                 <v-row no-gutters class="mt-1">
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
@@ -68,7 +68,7 @@ export default {
                 projection: 'perspective',
                 alpha: 15,
                 beta: -150,
-                distance: 240
+                distance: 270
             },
             textStyle: {
                 fontSize: 15,
