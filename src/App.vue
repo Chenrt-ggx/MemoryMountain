@@ -5,13 +5,33 @@
                 <div ref="surface" class="main-container"></div>
             </v-col>
             <v-col :cols="4">
-                <div>xxx</div>
+                <v-textarea
+                    outlined
+                    :rows="18"
+                    v-model="inputStr"
+                    label="粘贴运行结果"
+                    class="mt-10 px-10"
+                ></v-textarea>
+                <v-row class="mt-1">
+                    <v-spacer></v-spacer>
+                    <v-btn color="warning" outlined class="mx-12" @click="submit">
+                        <v-icon class="mr-2">mdi-check</v-icon>
+                        确认
+                    </v-btn>
+                    <v-btn color="success" outlined class="mx-12" @click="reset">
+                        <v-icon class="mr-2">mdi-close-circle-outline</v-icon>
+                        清空
+                    </v-btn>
+                    <v-spacer></v-spacer>
+                </v-row>
             </v-col>
         </v-row>
     </v-app>
 </template>
 
 <script>
+import { parse } from '@/utils/parse';
+
 export default {
     data: function () {
         return {
@@ -42,66 +62,48 @@ export default {
                 projection: 'perspective',
                 distance: 240
             },
-            mountain: [
-                [13169, 7740, 5662, 4520, 3446, 2915, 2473, 2121, 1849, 1455, 1380, 1172, 1008, 874, 959],
-                [13103, 8385, 5592, 4508, 3915, 3199, 2558, 2248, 1912, 1651, 1473, 1371, 1258, 1087, 860],
-                [12191, 8427, 5940, 4969, 3718, 3126, 2750, 2482, 2216, 1840, 1630, 1592, 1345, 1286, 1086],
-                [12937, 7037, 5865, 4263, 4654, 3996, 4506, 3960, 3512, 3103, 2571, 2250, 2125, 2028, 1890],
-                [11277, 10545, 10001, 9556, 9138, 8590, 7839, 7236, 6728, 6152, 6135, 5703, 5326, 4952, 4645],
-                [14662, 13401, 12244, 11583, 10804, 9866, 8885, 7988, 7250, 6617, 6129, 5668, 5300, 4952, 4631],
-                [15184, 13695, 12449, 11659, 10909, 9980, 9091, 8163, 7415, 6782, 6291, 5858, 5463, 5115, 4768],
-                [15308, 14108, 12793, 12170, 11311, 10287, 9288, 8365, 7600, 6933, 6540, 6082, 5626, 5283, 4988],
-                [
-                    15955, 15090, 13970, 13693, 13621, 13688, 13447, 13076, 12877, 12388, 11904, 11522, 11055, 11328,
-                    10808
-                ],
-                [
-                    16489, 15355, 14283, 13914, 13819, 13826, 13668, 13676, 13192, 13213, 12799, 12715, 12746, 12499,
-                    11840
-                ],
-                [
-                    16710, 15227, 14204, 13873, 13811, 13722, 13687, 13631, 13484, 13186, 13093, 12759, 12698, 11972,
-                    11745
-                ],
-                [
-                    16458, 16384, 16181, 16031, 15792, 15738, 16031, 15574, 15169, 15240, 15513, 15340, 15093, 15003,
-                    15170
-                ],
-                [
-                    16533, 16351, 16015, 15876, 15677, 15603, 15708, 14841, 15167, 14757, 14743, 14521, 14318, 15000,
-                    14757
-                ],
-                [
-                    16190, 16000, 15514, 15170, 15167, 14837, 15000, 14222, 13582, 13210, 13295, 13382, 13404, 12447,
-                    12698
-                ]
-            ]
+            inputStr: '',
+            mountain: []
         };
     },
     mounted() {
-        let formatted = [];
-        this.mountain.forEach((line, i) => line.forEach((item, j) => formatted.push([i, j, item])));
-        this.$echarts.init(this.$refs.surface).setOption({
-            visualMap: {
-                show: false,
-                min: Math.min(...formatted.map((i) => i[2])),
-                max: Math.max(...formatted.map((i) => i[2])),
-                color: this.colors.reverse()
-            },
-            grid3D: {
-                light: this.lights,
-                viewControl: this.viewControl
-            },
-            xAxis3D: {},
-            yAxis3D: {},
-            zAxis3D: {},
-            series: [
-                {
-                    type: 'surface',
-                    data: formatted
-                }
-            ]
-        });
+        this.refresh();
+    },
+    methods: {
+        refresh() {
+            let formatted = [];
+            this.mountain.forEach((line, i) => line.forEach((item, j) => formatted.push([i, j, item])));
+            this.$echarts.init(this.$refs.surface).setOption({
+                visualMap: {
+                    show: false,
+                    min: Math.min(...formatted.map((i) => i[2])),
+                    max: Math.max(...formatted.map((i) => i[2])),
+                    color: this.colors.reverse()
+                },
+                grid3D: {
+                    light: this.lights,
+                    viewControl: this.viewControl
+                },
+                xAxis3D: {},
+                yAxis3D: {},
+                zAxis3D: {},
+                series: [
+                    {
+                        type: 'surface',
+                        data: formatted
+                    }
+                ]
+            });
+        },
+        submit() {
+            this.mountain = parse(this.inputStr)['map'];
+            this.refresh();
+        },
+        reset() {
+            this.inputStr = '';
+            this.mountain = [];
+            this.refresh();
+        }
     }
 };
 </script>
