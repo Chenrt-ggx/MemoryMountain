@@ -26,6 +26,84 @@
                 </v-row>
             </v-col>
         </v-row>
+        <v-row no-gutters>
+            <v-spacer></v-spacer>
+            <v-row no-gutters v-if="$vuetify.breakpoint.mobile">
+                <v-row no-gutters>
+                    <v-spacer></v-spacer>
+                    <v-col :cols="10">
+                        <div class="black--text text-body-1 text-left">{{ '选择' + xName + ':' }}</div>
+                        <v-radio-group v-model="xAxisIndex" row @change="refreshXAxis">
+                            <v-radio
+                                v-for="(item, index) in xAxis"
+                                :key="index"
+                                :label="item"
+                                :value="index"
+                                class="mr-3"
+                            ></v-radio>
+                        </v-radio-group>
+                    </v-col>
+                    <v-spacer></v-spacer>
+                </v-row>
+            </v-row>
+            <v-radio-group v-model="xAxisIndex" row @change="refreshXAxis" v-else>
+                <template v-slot:label>
+                    <span class="black--text text-body-1 mr-3">{{ '选择' + xName + ':' }}</span>
+                </template>
+                <v-radio
+                    v-for="(item, index) in xAxis"
+                    :key="index"
+                    :label="item"
+                    :value="index"
+                    class="mr-3"
+                ></v-radio>
+            </v-radio-group>
+            <v-spacer></v-spacer>
+        </v-row>
+        <v-row no-gutters>
+            <v-spacer></v-spacer>
+            <div ref="xDraw" :class="$vuetify.breakpoint.mobile ? 'sub-container-mb' : 'sub-container-pc'"></div>
+            <v-spacer></v-spacer>
+        </v-row>
+        <v-row no-gutters>
+            <v-spacer></v-spacer>
+            <v-row no-gutters v-if="$vuetify.breakpoint.mobile">
+                <v-row no-gutters>
+                    <v-spacer></v-spacer>
+                    <v-col :cols="10">
+                        <div class="black--text text-body-1 text-left">{{ '选择' + yName + ':' }}</div>
+                        <v-radio-group v-model="yAxisIndex" row @change="refreshYAxis">
+                            <v-radio
+                                v-for="(item, index) in yAxis"
+                                :key="index"
+                                :label="item"
+                                :value="index"
+                                class="mr-3"
+                            ></v-radio>
+                        </v-radio-group>
+                    </v-col>
+                    <v-spacer></v-spacer>
+                </v-row>
+            </v-row>
+            <v-radio-group v-model="yAxisIndex" row @change="refreshYAxis" v-else>
+                <template v-slot:label>
+                    <span class="black--text text-body-1 mr-3">{{ '选择' + yName + ':' }}</span>
+                </template>
+                <v-radio
+                    v-for="(item, index) in yAxis"
+                    :key="index"
+                    :label="item"
+                    :value="index"
+                    class="mr-3"
+                ></v-radio>
+            </v-radio-group>
+            <v-spacer></v-spacer>
+        </v-row>
+        <v-row no-gutters>
+            <v-spacer></v-spacer>
+            <div ref="yDraw" :class="$vuetify.breakpoint.mobile ? 'sub-container-mb' : 'sub-container-pc'"></div>
+            <v-spacer></v-spacer>
+        </v-row>
     </v-app>
 </template>
 
@@ -35,10 +113,17 @@ import { parse } from '@/utils/parse';
 export default {
     data: function () {
         return {
-            echarts: null,
+            mainChart: null,
             inputStr: '',
             xAxis: [],
+            xName: '工作集大小（字节）',
+            xAxisIndex: 0,
+            xChart: null,
             yAxis: [],
+            yName: '步长（字）',
+            yAxisIndex: 0,
+            yChart: null,
+            zName: '读吞吐率（MB/s）',
             mountain: [],
             failed: '',
             colors: [
@@ -71,17 +156,38 @@ export default {
                 distance: 270
             },
             textStyle: {
-                fontSize: 15,
-                fontFamily: 'Serif'
+                nameLocation: 'center',
+                nameTextStyle: {
+                    fontSize: 17,
+                    fontFamily: 'Serif',
+                    padding: [16, 0, 44, 0]
+                },
+                axisLabel: {
+                    fontSize: 15,
+                    fontFamily: 'Serif'
+                }
             },
-            nameStyle: {
-                fontSize: 17,
-                fontFamily: 'Serif'
+            lineSeries: {
+                type: 'line',
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: 16,
+                        fontFamily: 'Serif'
+                    }
+                }
             }
         };
     },
     mounted() {
-        this.echarts = this.$echarts.init(this.$refs.surface);
+        this.mainChart = this.$echarts.init(this.$refs.surface);
+        this.xChart = this.$echarts.init(this.$refs.xDraw);
+        this.yChart = this.$echarts.init(this.$refs.yDraw);
+        window.onresize = () => {
+            this.mainChart.resize();
+            this.xChart.resize();
+            this.yChart.resize();
+        };
         this.colors.reverse();
         const inputStr = this.$route.query['map'];
         if (inputStr) {
@@ -93,13 +199,16 @@ export default {
                 this.yAxis = result['yAxis'];
             }
         }
-        this.refresh();
+        this.refreshMain();
     },
     methods: {
-        refresh() {
+        refreshMain() {
             let formatted = [];
+            this.xAxisIndex = this.yAxisIndex = 0;
+            this.refreshXAxis();
+            this.refreshYAxis();
             this.mountain.forEach((line, i) => line.forEach((item, j) => formatted.push([i, j, item])));
-            this.echarts.setOption({
+            this.mainChart.setOption({
                 visualMap: {
                     show: false,
                     min: Math.min(...formatted.map((i) => i[2])),
@@ -113,33 +222,72 @@ export default {
                 xAxis3D: {
                     type: 'category',
                     data: this.xAxis,
-                    name: '工作集大小（字节）',
-                    nameTextStyle: this.nameStyle,
-                    axisLabel: {
-                        textStyle: this.textStyle
-                    }
+                    name: this.xName,
+                    ...this.textStyle
                 },
                 yAxis3D: {
                     type: 'category',
                     data: this.yAxis,
-                    name: '步长（字）',
-                    nameTextStyle: this.nameStyle,
-                    axisLabel: {
-                        textStyle: this.textStyle
-                    }
+                    name: this.yName,
+                    ...this.textStyle
                 },
                 zAxis3D: {
-                    name: '读吞吐率（MB/s）',
-                    nameTextStyle: this.nameStyle,
+                    name: this.zName,
+                    nameTextStyle: this.textStyle.nameTextStyle,
                     axisLabel: {
                         show: formatted.length > 0,
-                        textStyle: this.textStyle
+                        ...this.textStyle.axisLabel
                     }
                 },
                 series: [
                     {
                         type: 'surface',
-                        data: formatted
+                        data: formatted,
+                        dataShape: [this.xAxis.length, this.yAxis.length]
+                    }
+                ]
+            });
+        },
+        refreshXAxis() {
+            this.xChart.setOption({
+                xAxis: {
+                    type: 'category',
+                    data: this.yAxis,
+                    name: this.yName,
+                    ...this.textStyle
+                },
+                yAxis: {
+                    type: 'value',
+                    name: this.zName,
+                    nameRotate: 90,
+                    ...this.textStyle
+                },
+                series: [
+                    {
+                        ...this.lineSeries,
+                        data: this.mountain[this.xAxisIndex]
+                    }
+                ]
+            });
+        },
+        refreshYAxis() {
+            this.yChart.setOption({
+                xAxis: {
+                    type: 'category',
+                    data: this.xAxis,
+                    name: this.xName,
+                    ...this.textStyle
+                },
+                yAxis: {
+                    type: 'value',
+                    name: this.zName,
+                    nameRotate: 90,
+                    ...this.textStyle
+                },
+                series: [
+                    {
+                        ...this.lineSeries,
+                        data: this.mountain.map((i) => i[this.yAxisIndex])
                     }
                 ]
             });
@@ -156,7 +304,7 @@ export default {
                     this.mountain = result['map'];
                     this.xAxis = result['xAxis'];
                     this.yAxis = result['yAxis'];
-                    this.refresh();
+                    this.refreshMain();
                 }
             }
         },
@@ -165,7 +313,7 @@ export default {
             this.inputStr = '';
             this.mountain = [];
             this.xAxis = this.yAxis = [];
-            this.refresh();
+            this.refreshMain();
         }
     }
 };
@@ -193,5 +341,17 @@ body {
     width: 100%;
     height: 115%;
     margin-top: -11%;
+}
+
+.sub-container-pc {
+    width: 64vw;
+    height: 36vw;
+    margin-left: 4vw;
+}
+
+.sub-container-mb {
+    width: 96vw;
+    height: 54vw;
+    margin-left: 6vw;
 }
 </style>
