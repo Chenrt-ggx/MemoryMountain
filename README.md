@@ -1,29 +1,41 @@
-# memory-mountain
+# 存储器山绘图
 
-## Project setup
+## 网页前端
+
+### 安装依赖
 
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 本地调试
 
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 本地构建
 
 ```
-npm run build
+npm run build-local
 ```
 
-### Lints and fixes files
+### Github Action 构建
 
 ```
-npm run lint
+npm run build-action
 ```
 
-### Customize configuration
+## 本地计算
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 使用 Github 前端
+
+```
+cd core && python runner.py
+```
+
+### 使用本地前端
+
+```
+cd core && python runner.py -local
+```
