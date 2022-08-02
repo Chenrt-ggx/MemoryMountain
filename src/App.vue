@@ -1,11 +1,23 @@
 <template>
     <v-app id="app">
         <v-row no-gutters>
-            <v-col :cols="8">
-                <div ref="surface" class="main-container"></div>
+            <v-spacer></v-spacer>
+            <v-col :cols="$vuetify.breakpoint.mobile ? 8 : 7">
+                <div
+                    ref="surface"
+                    class="main-container"
+                    :style="{ marginLeft: $vuetify.breakpoint.mobile ? '1%' : '-9%' }"
+                ></div>
             </v-col>
             <v-col :cols="4">
-                <v-textarea filled :rows="15" v-model="inputStr" label="粘贴运行结果" class="mt-10 px-10"></v-textarea>
+                <v-textarea
+                    filled
+                    no-resize
+                    :height="$vuetify.breakpoint.mobile ? '32vw' : '36vw'"
+                    v-model="inputStr"
+                    label="粘贴运行结果"
+                    class="mt-10 px-10"
+                ></v-textarea>
                 <v-row no-gutters class="mt-1">
                     <v-spacer></v-spacer>
                     <v-spacer></v-spacer>
@@ -25,8 +37,9 @@
                     <div v-if="failed.length" class="red--text text-body-2 ml-10">{{ failed }}</div>
                 </v-row>
             </v-col>
+            <v-spacer></v-spacer>
         </v-row>
-        <v-row no-gutters>
+        <v-row no-gutters :style="{ marginTop: $vuetify.breakpoint.mobile ? '-3vw' : '-5vw' }">
             <v-spacer></v-spacer>
             <v-row no-gutters v-if="$vuetify.breakpoint.mobile">
                 <v-row no-gutters>
@@ -151,8 +164,8 @@ export default {
             },
             viewControl: {
                 projection: 'perspective',
-                alpha: 15,
-                beta: -150,
+                alpha: 20,
+                beta: -145,
                 distance: 270
             },
             textStyle: {
@@ -338,9 +351,9 @@ body {
 
 <style scoped>
 .main-container {
-    width: 100%;
-    height: 115%;
-    margin-top: -11%;
+    width: 125%;
+    height: 60vw;
+    margin-top: -10vw;
 }
 
 .sub-container-pc {
