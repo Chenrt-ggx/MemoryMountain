@@ -6,7 +6,7 @@
                 <div
                     ref="surface"
                     class="main-container"
-                    :style="{ marginLeft: $vuetify.breakpoint.mobile ? '1%' : '-9%' }"
+                    :style="{ marginLeft: $vuetify.breakpoint.mobile ? '-4%' : '-9%' }"
                 ></div>
             </v-col>
             <v-col :cols="4">
@@ -127,6 +127,8 @@
 <script>
 import { parse } from '@/utils/parse';
 
+const echarts = require('echarts');
+
 export default {
     data: function () {
         return {
@@ -192,6 +194,21 @@ export default {
                         fontSize: 16,
                         position: 'top',
                         fontFamily: 'Serif'
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        barBorderRadius: [12, 12, 0, 0],
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: '#ba7ef3'
+                            },
+                            {
+                                offset: 1,
+                                color: '#965df2'
+                            }
+                        ])
                     }
                 }
             }
