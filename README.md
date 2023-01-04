@@ -1,5 +1,19 @@
 # 存储器山绘图
 
+## 本地计算
+
+### 使用 Github 前端
+
+```
+cd core && python runner.py
+```
+
+### 使用本地前端
+
+```
+cd core && python runner.py -local
+```
+
 ## 网页前端
 
 ### 安装依赖
@@ -24,18 +38,4 @@ npm run build-local
 
 ```
 npm run build-action
-```
-
-## 本地计算
-
-### 使用 Github 前端
-
-```
-cd core && python runner.py
-```
-
-### 使用本地前端
-
-```
-cd core && python runner.py -local
 ```
