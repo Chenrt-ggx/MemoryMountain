@@ -1,5 +1,7 @@
 # 存储器山绘图
 
+![License](https://img.shields.io/github/license/Chenrt-ggx/ScoreCalculator)
+
 ## 本地计算
 
 ### 使用 Github 前端
