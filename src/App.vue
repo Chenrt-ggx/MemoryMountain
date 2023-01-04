@@ -158,9 +158,9 @@ export default {
             ],
             lights: {
                 main: {
-                    intensity: 0.3,
-                    alpha: 135,
-                    beta: 45
+                    intensity: 0.4,
+                    alpha: 30,
+                    beta: 120
                 },
                 ambient: {
                     intensity: 0.8
@@ -169,7 +169,7 @@ export default {
             viewControl: {
                 projection: 'perspective',
                 alpha: 20,
-                beta: -145,
+                beta: 35,
                 distance: 270
             },
             textStyle: {
@@ -282,7 +282,7 @@ export default {
                 series: [
                     {
                         ...this.lineSeries,
-                        data: this.mountain.map((i) => i[this.xAxisIndex])
+                        data: this.mountain[this.xAxisIndex]
                     }
                 ]
             });
@@ -304,7 +304,7 @@ export default {
                 series: [
                     {
                         ...this.lineSeries,
-                        data: this.mountain[this.yAxisIndex]
+                        data: this.mountain.map((i) => i[this.yAxisIndex])
                     }
                 ]
             });
