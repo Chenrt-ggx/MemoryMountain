@@ -39,84 +39,88 @@
             </v-col>
             <v-spacer></v-spacer>
         </v-row>
-        <v-row no-gutters :style="{ marginTop: $vuetify.breakpoint.mobile ? '-3vw' : '-5vw' }">
-            <v-spacer></v-spacer>
-            <v-row no-gutters v-if="$vuetify.breakpoint.mobile">
-                <v-row no-gutters>
-                    <v-spacer></v-spacer>
-                    <v-col :cols="10">
-                        <div class="black--text text-body-1 text-left">{{ '选择' + xName + ':' }}</div>
-                        <v-radio-group v-model="xAxisIndex" row @change="refreshXAxis">
-                            <v-radio
-                                v-for="(item, index) in xAxis"
-                                :key="index"
-                                :label="item"
-                                :value="index"
-                                class="mr-3"
-                            ></v-radio>
-                        </v-radio-group>
-                    </v-col>
-                    <v-spacer></v-spacer>
+        <div v-show="xAxis.length !== 0">
+            <v-row no-gutters :style="{ marginTop: $vuetify.breakpoint.mobile ? '-3vw' : '-5vw' }">
+                <v-spacer></v-spacer>
+                <v-row no-gutters v-if="$vuetify.breakpoint.mobile">
+                    <v-row no-gutters>
+                        <v-spacer></v-spacer>
+                        <v-col :cols="10">
+                            <div class="black--text text-body-1 text-left">{{ '选择' + xName + ':' }}</div>
+                            <v-radio-group v-model="xAxisIndex" row @change="refreshXAxis">
+                                <v-radio
+                                    v-for="(item, index) in xAxis"
+                                    :key="index"
+                                    :label="item"
+                                    :value="index"
+                                    class="mr-3"
+                                ></v-radio>
+                            </v-radio-group>
+                        </v-col>
+                        <v-spacer></v-spacer>
+                    </v-row>
                 </v-row>
+                <v-radio-group v-model="xAxisIndex" row @change="refreshXAxis" v-else>
+                    <template v-slot:label>
+                        <span class="black--text text-body-1 mr-3">{{ '选择' + xName + ':' }}</span>
+                    </template>
+                    <v-radio
+                        v-for="(item, index) in xAxis"
+                        :key="index"
+                        :label="item"
+                        :value="index"
+                        class="mr-3"
+                    ></v-radio>
+                </v-radio-group>
+                <v-spacer></v-spacer>
             </v-row>
-            <v-radio-group v-model="xAxisIndex" row @change="refreshXAxis" v-else>
-                <template v-slot:label>
-                    <span class="black--text text-body-1 mr-3">{{ '选择' + xName + ':' }}</span>
-                </template>
-                <v-radio
-                    v-for="(item, index) in xAxis"
-                    :key="index"
-                    :label="item"
-                    :value="index"
-                    class="mr-3"
-                ></v-radio>
-            </v-radio-group>
-            <v-spacer></v-spacer>
-        </v-row>
-        <v-row no-gutters>
-            <v-spacer></v-spacer>
-            <div ref="xDraw" :class="$vuetify.breakpoint.mobile ? 'sub-container-mb' : 'sub-container-pc'"></div>
-            <v-spacer></v-spacer>
-        </v-row>
-        <v-row no-gutters>
-            <v-spacer></v-spacer>
-            <v-row no-gutters v-if="$vuetify.breakpoint.mobile">
-                <v-row no-gutters>
-                    <v-spacer></v-spacer>
-                    <v-col :cols="10">
-                        <div class="black--text text-body-1 text-left">{{ '选择' + yName + ':' }}</div>
-                        <v-radio-group v-model="yAxisIndex" row @change="refreshYAxis">
-                            <v-radio
-                                v-for="(item, index) in yAxis"
-                                :key="index"
-                                :label="item"
-                                :value="index"
-                                class="mr-3"
-                            ></v-radio>
-                        </v-radio-group>
-                    </v-col>
-                    <v-spacer></v-spacer>
+            <v-row no-gutters>
+                <v-spacer></v-spacer>
+                <div ref="xDraw" :class="$vuetify.breakpoint.mobile ? 'sub-container-mb' : 'sub-container-pc'"></div>
+                <v-spacer></v-spacer>
+            </v-row>
+        </div>
+        <div v-show="yAxis.length !== 0">
+            <v-row no-gutters>
+                <v-spacer></v-spacer>
+                <v-row no-gutters v-if="$vuetify.breakpoint.mobile">
+                    <v-row no-gutters>
+                        <v-spacer></v-spacer>
+                        <v-col :cols="10">
+                            <div class="black--text text-body-1 text-left">{{ '选择' + yName + ':' }}</div>
+                            <v-radio-group v-model="yAxisIndex" row @change="refreshYAxis">
+                                <v-radio
+                                    v-for="(item, index) in yAxis"
+                                    :key="index"
+                                    :label="item"
+                                    :value="index"
+                                    class="mr-3"
+                                ></v-radio>
+                            </v-radio-group>
+                        </v-col>
+                        <v-spacer></v-spacer>
+                    </v-row>
                 </v-row>
+                <v-radio-group v-model="yAxisIndex" row @change="refreshYAxis" v-else>
+                    <template v-slot:label>
+                        <span class="black--text text-body-1 mr-3">{{ '选择' + yName + ':' }}</span>
+                    </template>
+                    <v-radio
+                        v-for="(item, index) in yAxis"
+                        :key="index"
+                        :label="item"
+                        :value="index"
+                        class="mr-3"
+                    ></v-radio>
+                </v-radio-group>
+                <v-spacer></v-spacer>
             </v-row>
-            <v-radio-group v-model="yAxisIndex" row @change="refreshYAxis" v-else>
-                <template v-slot:label>
-                    <span class="black--text text-body-1 mr-3">{{ '选择' + yName + ':' }}</span>
-                </template>
-                <v-radio
-                    v-for="(item, index) in yAxis"
-                    :key="index"
-                    :label="item"
-                    :value="index"
-                    class="mr-3"
-                ></v-radio>
-            </v-radio-group>
-            <v-spacer></v-spacer>
-        </v-row>
-        <v-row no-gutters>
-            <v-spacer></v-spacer>
-            <div ref="yDraw" :class="$vuetify.breakpoint.mobile ? 'sub-container-mb' : 'sub-container-pc'"></div>
-            <v-spacer></v-spacer>
-        </v-row>
+            <v-row no-gutters>
+                <v-spacer></v-spacer>
+                <div ref="yDraw" :class="$vuetify.breakpoint.mobile ? 'sub-container-mb' : 'sub-container-pc'"></div>
+                <v-spacer></v-spacer>
+            </v-row>
+        </div>
     </v-app>
 </template>
 
@@ -129,11 +133,11 @@ export default {
             mainChart: null,
             inputStr: '',
             xAxis: [],
-            xName: '工作集大小（字节）',
+            xName: '步长（字）',
             xAxisIndex: 0,
             xChart: null,
             yAxis: [],
-            yName: '步长（字）',
+            yName: '工作集大小（字节）',
             yAxisIndex: 0,
             yChart: null,
             zName: '读吞吐率（MB/s）',
@@ -278,7 +282,7 @@ export default {
                 series: [
                     {
                         ...this.lineSeries,
-                        data: this.mountain[this.xAxisIndex]
+                        data: this.mountain.map((i) => i[this.xAxisIndex])
                     }
                 ]
             });
@@ -300,7 +304,7 @@ export default {
                 series: [
                     {
                         ...this.lineSeries,
-                        data: this.mountain.map((i) => i[this.yAxisIndex])
+                        data: this.mountain[this.yAxisIndex]
                     }
                 ]
             });

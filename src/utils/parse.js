@@ -7,9 +7,9 @@ export function parse(str) {
         .map((i) => i.trim().split(/\s+/))
         .forEach((i) => {
             if (i.length === 15) {
-                yAxis = i;
+                xAxis = i;
             } else if (i.length === 16) {
-                xAxis.push(i[0]);
+                yAxis.push(i[0]);
                 map.push(
                     Array(i.length - 1)
                         .fill(1)
