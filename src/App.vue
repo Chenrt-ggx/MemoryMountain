@@ -184,12 +184,13 @@ export default {
                     fontFamily: 'Serif'
                 }
             },
-            lineSeries: {
-                type: 'line',
+            barSeries: {
+                type: 'bar',
                 emphasis: {
                     label: {
                         show: true,
                         fontSize: 16,
+                        position: 'top',
                         fontFamily: 'Serif'
                     }
                 }
@@ -281,7 +282,7 @@ export default {
                 },
                 series: [
                     {
-                        ...this.lineSeries,
+                        ...this.barSeries,
                         data: this.mountain[this.xAxisIndex]
                     }
                 ]
@@ -303,7 +304,7 @@ export default {
                 },
                 series: [
                     {
-                        ...this.lineSeries,
+                        ...this.barSeries,
                         data: this.mountain.map((i) => i[this.yAxisIndex])
                     }
                 ]
