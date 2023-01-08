@@ -1,6 +1,7 @@
 # 存储器山绘图
 
-![License](https://img.shields.io/github/license/Chenrt-ggx/ScoreCalculator)
+![license](https://img.shields.io/github/license/Chenrt-ggx/MemoryMountain)
+![version](https://img.shields.io/github/package-json/v/Chenrt-ggx/MemoryMountain)
 
 ## 本地计算
 
